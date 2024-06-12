@@ -20,7 +20,7 @@ type OrganizationRepository struct {
 func (r OrganizationRepository) List() (*[]domains.Organization, error) {
 	organizations := new([]domains.Organization)
 	sql := "SELECT * FROM organization"
-	err := r.db.Select(organizations, sql)
+	err := r.db.Select(&organizations, sql)
 	if err != nil {
 		return nil, err
 	}
@@ -31,7 +31,7 @@ func (r OrganizationRepository) List() (*[]domains.Organization, error) {
 func (r OrganizationRepository) Retrieve(id string) (*domains.Organization, error) {
 	organization := new(domains.Organization)
 	sql := "SELECT * FROM organization WHERE organization_id=$1"
-	err := r.db.Get(organization, sql, id)
+	err := r.db.Get(&organization, sql, id)
 	if err != nil {
 		return nil, err
 	}

@@ -20,6 +20,8 @@ create table if not exists "user"
     last_login      timestamp without time zone default null,
     role            int                         default 2,
     organization_id varchar(36)  not null,
+    created_at      timestamp without time zone,
+    updated_at      timestamp without time zone,
 
     primary key (user_id),
     foreign key (organization_id) references organization (organization_id)
@@ -31,8 +33,8 @@ create table if not exists "table"
     label           varchar(256) not null,
     is_deleted      boolean                     default false,
     organization_id varchar(36)  not null,
-    created_at      timestamp without time zone default now(),
-    updated_at      timestamp without time zone default now(),
+    created_at      timestamp without time zone,
+    updated_at      timestamp without time zone,
 
     primary key (table_id),
     foreign key (organization_id) references organization (organization_id)
@@ -45,6 +47,8 @@ create table if not exists table_header
     is_deleted      boolean default false,
     table_id        varchar(36)  not null,
     parent_id       varchar(36)  not null,
+    created_at      timestamp without time zone,
+    updated_at      timestamp without time zone,
 
     primary key (table_header_id),
     foreign key (table_id) references "table" (table_id),
@@ -57,6 +61,8 @@ create table if not exists table_row
     label        varchar(256) not null,
     is_deleted boolean default false,
     table_id varchar(36)  not null,
+    created_at      timestamp without time zone,
+    updated_at      timestamp without time zone,
 
     primary key (table_row_id),
     foreign key (table_id) references "table" (table_id)
@@ -73,6 +79,8 @@ create table if not exists table_cell
     table_id        varchar(36)  not null,
     value           varchar(256) not null,
     type            int          not null,
+    created_at      timestamp without time zone,
+    updated_at      timestamp without time zone,
 
     primary key (table_cell_id),
     foreign key (table_id) references "table" (table_id),

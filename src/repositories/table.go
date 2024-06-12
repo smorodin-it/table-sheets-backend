@@ -10,7 +10,7 @@ type Table interface {
 	Retrieve(id string) (*domains.Table, error)
 	Create(table *domains.Table) (*domains.Table, error)
 	Update(table *domains.Table) (*domains.Table, error)
-	Delete(status *domains.UpdateBool) (*domains.Table, error)
+	Delete(status *domains.UpdateBool) error
 }
 type TableRepository struct {
 	db *sqlx.DB
@@ -30,7 +30,7 @@ func (r TableRepository) List() (*[]domains.Table, error) {
 func (r TableRepository) Retrieve(id string) (*domains.Table, error) {
 	table := new(domains.Table)
 	sql := "SELECT * FROM \"table\" WHERE table_id=$1"
-	err := r.db.Get(table, sql, id)
+	err := r.db.Get(&table, sql, id)
 	if err != nil {
 		return nil, err
 	}

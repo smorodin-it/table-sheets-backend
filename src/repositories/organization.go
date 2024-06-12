@@ -8,8 +8,8 @@ import (
 type Organization interface {
 	List() (*[]domains.Organization, error)
 	Retrieve(id string) (*domains.Organization, error)
-	Create(*domains.Organization) (*domains.Organization, error)
-	Update(*domains.Organization) (*domains.Organization, error)
+	Create(organization *domains.Organization) (*domains.Organization, error)
+	Update(organization *domains.Organization) (*domains.Organization, error)
 	Delete(status *domains.UpdateBool) error
 }
 
@@ -50,7 +50,8 @@ func (r OrganizationRepository) Create(organization *domains.Organization) (*dom
 }
 
 func (r OrganizationRepository) Update(organization *domains.Organization) (*domains.Organization, error) {
-	_, err := r.db.NamedQuery("UPDATE organization SET label=:label, updated_at=:updated_at WHERE organization_id=:organization_id", organization)
+	sql := "UPDATE organization SET label=:label, updated_at=:updated_at WHERE organization_id=:organization_id"
+	_, err := r.db.NamedQuery(sql, organization)
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +60,8 @@ func (r OrganizationRepository) Update(organization *domains.Organization) (*dom
 }
 
 func (r OrganizationRepository) Delete(status *domains.UpdateBool) error {
-	_, err := r.db.NamedQuery("UPDATE organization SET is_deleted=:status, updated_at=:updated_at WHERE organization_id=:organization_id", status)
+	sql := "UPDATE organization SET is_deleted=:status, updated_at=:updated_at WHERE organization_id=:entity_id"
+	_, err := r.db.NamedQuery(sql, status)
 	if err != nil {
 		return err
 	}

@@ -5,12 +5,12 @@ import (
 	"min-selhoz-backend/src/domains"
 )
 
-type User interface {
+type UserRepositoryInterface interface {
 	List() (*[]domains.User, error)
 	Retrieve(id string) (*domains.User, error)
 	Create(*domains.User) (*domains.User, error)
 	Update(*domains.User) (*domains.User, error)
-	Enable(updateBool *domains.UpdateBool) (*domains.UpdateBool, error)
+	Enable(updateBool *domains.UpdateBool) error
 }
 
 type UserRepository struct {
@@ -59,12 +59,16 @@ func (r UserRepository) Update(user *domains.User) (*domains.User, error) {
 	return user, nil
 }
 
-func (r UserRepository) Enable(status *domains.UpdateBool) (*domains.UpdateBool, error) {
+func (r UserRepository) Enable(status *domains.UpdateBool) error {
 	sql := "UPDATE \"user\" SET enabled=:status WHERE user_id=:user_id"
 	_, err := r.db.NamedQuery(sql, status)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return status, nil
+	return nil
+}
+
+func NewUserRepository(db *sqlx.DB) UserRepositoryInterface {
+	return UserRepository{db}
 }

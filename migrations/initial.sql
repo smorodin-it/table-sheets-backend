@@ -2,7 +2,7 @@ create table if not exists organization
 (
     organization_id varchar(36),
     label           varchar(256) not null,
-    is_deleted      boolean default false,
+    enabled         boolean default true,
     created_at      timestamp without time zone,
     updated_at      timestamp without time zone,
 
@@ -73,12 +73,12 @@ create table if not exists table_row
 
 create table if not exists table_cell
 (
-    table_cell_id   varchar(36)  not null,
-    table_header_id varchar(36)  not null,
-    table_row_id    varchar(36)  not null,
-    table_id        varchar(36)  not null,
+    table_cell_id   varchar(36) not null,
+    table_header_id varchar(36) not null,
+    table_row_id    varchar(36) not null,
+    table_id        varchar(36) not null,
     value           varchar(256),
-    type            int          not null,
+    type            int         not null,
     created_at      timestamp without time zone,
     updated_at      timestamp without time zone,
 

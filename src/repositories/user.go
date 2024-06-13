@@ -8,8 +8,8 @@ import (
 type UserRepositoryInterface interface {
 	List() (*[]domains.User, error)
 	Retrieve(id string) (*domains.User, error)
-	Create(*domains.User) (*domains.User, error)
-	Update(*domains.User) (*domains.User, error)
+	Create(*domains.User) error
+	Update(update *domains.UserUpdate) error
 	Enable(updateBool *domains.UpdateBool) error
 }
 
@@ -39,24 +39,24 @@ func (r UserRepository) Retrieve(id string) (*domains.User, error) {
 	return user, nil
 }
 
-func (r UserRepository) Create(user *domains.User) (*domains.User, error) {
+func (r UserRepository) Create(user *domains.User) error {
 	sql := "INSERT INTO \"user\" (user_id, username, first_name, last_name, patronymic, enabled, role, organization_id) VALUES (:user_id, :username, :first_name, :last_name, :patronymic, :enabled, :role, :organization_id)"
 	_, err := r.db.NamedQuery(sql, user)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return user, nil
+	return nil
 }
 
-func (r UserRepository) Update(user *domains.User) (*domains.User, error) {
+func (r UserRepository) Update(user *domains.UserUpdate) error {
 	sql := "UPDATE \"user\" SET username=:username, first_name=:first_name, last_name=:last_name, patronymic=:patronymic, role=:role, organization_id=:organization_id WHERE user_id=:user_id"
 	_, err := r.db.NamedQuery(sql, user)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return user, nil
+	return nil
 }
 
 func (r UserRepository) Enable(status *domains.UpdateBool) error {

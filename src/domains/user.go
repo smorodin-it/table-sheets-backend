@@ -1,6 +1,9 @@
 package domains
 
-import "time"
+import (
+	"min-selhoz-backend/src/forms"
+	"time"
+)
 
 type User struct {
 	ID             string     `db:"user_id"`
@@ -12,4 +15,9 @@ type User struct {
 	LastLogin      *time.Time `db:"last_login"`
 	Role           int        `db:"role"`
 	OrganizationId string     `db:"organization_id"`
+}
+
+type UserUpdate struct {
+	ID string `db:"user_id"`
+	forms.User
 }

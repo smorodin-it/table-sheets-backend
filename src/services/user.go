@@ -12,9 +12,9 @@ import (
 type UserServiceInterface interface {
 	List() (*responses.UserListResp, error)
 	Retrieve(id string) (*responses.UserResp, error)
-	Create(form *forms.UserForm) (*responses.UserResp, error)
-	Update(form *forms.UserForm) (*responses.UserResp, error)
-	Enable(form *forms.UpdateBoolForm) error
+	Create(form *forms.User) (*responses.ResponseAdd, error)
+	Update(form *forms.User, id string) (*responses.ResponseStatus, error)
+	Enable(form *forms.UpdateBoolForm, id string) error
 }
 
 type UserService struct {
@@ -27,9 +27,9 @@ func (s UserService) List() (*responses.UserListResp, error) {
 		return nil, err
 	}
 
-	users := make(responses.UserListResp, 0)
+	usersResp := make(responses.UserListResp, 0)
 	for _, user := range *usersDomains {
-		users = append(users, responses.UserResp{
+		usersResp = append(usersResp, responses.UserResp{
 			ID:             user.ID,
 			Username:       user.Username,
 			FirstName:      user.FirstName,
@@ -42,7 +42,7 @@ func (s UserService) List() (*responses.UserListResp, error) {
 		})
 	}
 
-	return &users, nil
+	return &usersResp, nil
 }
 
 func (s UserService) Retrieve(id string) (*responses.UserResp, error) {
@@ -66,7 +66,7 @@ func (s UserService) Retrieve(id string) (*responses.UserResp, error) {
 	return &user, nil
 }
 
-func (s UserService) Create(form *forms.UserForm) (*responses.UserResp, error) {
+func (s UserService) Create(form *forms.User) (*responses.ResponseAdd, error) {
 	userDomain := domains.User{
 		ID:             uuid.New().String(),
 		Username:       form.Username,
@@ -77,60 +77,40 @@ func (s UserService) Create(form *forms.UserForm) (*responses.UserResp, error) {
 		Role:           form.Role,
 		OrganizationId: form.OrganizationId,
 	}
-	user, err := s.r.Create(&userDomain)
+	err := s.r.Create(&userDomain)
 	if err != nil {
 		return nil, err
 	}
 
-	userResp := responses.UserResp{
-		ID:             user.ID,
-		Username:       user.Username,
-		FirstName:      user.FirstName,
-		LastName:       user.LastName,
-		Patronymic:     user.Patronymic,
-		Enabled:        user.Enabled,
-		LastLogin:      user.LastLogin,
-		Role:           user.Role,
-		OrganizationId: user.OrganizationId,
-	}
-
-	return &userResp, nil
+	return &responses.ResponseAdd{ID: userDomain.ID}, nil
 }
 
-func (s UserService) Update(form *forms.UserForm) (*responses.UserResp, error) {
-	userDomain := domains.User{
-		ID:             uuid.New().String(),
-		Username:       form.Username,
-		FirstName:      form.FirstName,
-		LastName:       form.LastName,
-		Patronymic:     form.Patronymic,
-		Enabled:        true,
-		Role:           form.Role,
-		OrganizationId: form.OrganizationId,
+func (s UserService) Update(form *forms.User, id string) (*responses.ResponseStatus, error) {
+	userDomain := domains.UserUpdate{
+		ID: id,
+		User: forms.User{
+			Username:       form.Username,
+			FirstName:      form.FirstName,
+			LastName:       form.LastName,
+			Patronymic:     form.Patronymic,
+			Role:           form.Role,
+			OrganizationId: form.OrganizationId,
+		},
 	}
-	user, err := s.r.Update(&userDomain)
+
+	err := s.r.Update(&userDomain)
 	if err != nil {
 		return nil, err
 	}
 
-	userResp := responses.UserResp{
-		ID:             user.ID,
-		Username:       user.Username,
-		FirstName:      user.FirstName,
-		LastName:       user.LastName,
-		Patronymic:     user.Patronymic,
-		Enabled:        user.Enabled,
-		LastLogin:      user.LastLogin,
-		Role:           user.Role,
-		OrganizationId: user.OrganizationId,
-	}
-
-	return &userResp, nil
+	return &responses.ResponseStatus{
+		Status: true,
+	}, nil
 }
 
-func (s UserService) Enable(form *forms.UpdateBoolForm) error {
+func (s UserService) Enable(form *forms.UpdateBoolForm, id string) error {
 	statusDomain := domains.UpdateBool{
-		ID:        form.ID,
+		ID:        id,
 		Status:    form.Status,
 		UpdatedAt: time.Now(),
 	}

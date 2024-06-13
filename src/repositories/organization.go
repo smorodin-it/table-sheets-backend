@@ -5,12 +5,12 @@ import (
 	"min-selhoz-backend/src/domains"
 )
 
-type Organization interface {
+type OrganizationRepositoryInterface interface {
 	List() (*[]domains.Organization, error)
 	Retrieve(id string) (*domains.Organization, error)
-	Create(organization *domains.Organization) (*domains.Organization, error)
-	Update(organization *domains.Organization) (*domains.Organization, error)
-	Delete(status *domains.UpdateBool) error
+	Create(organization *domains.Organization) error
+	Update(organization *domains.OrganizationUpdate) error
+	SetEnabled(status *domains.UpdateBool) error
 }
 
 type OrganizationRepository struct {
@@ -39,28 +39,28 @@ func (r OrganizationRepository) Retrieve(id string) (*domains.Organization, erro
 	return organization, nil
 }
 
-func (r OrganizationRepository) Create(organization *domains.Organization) (*domains.Organization, error) {
+func (r OrganizationRepository) Create(organization *domains.Organization) error {
 	sql := "INSERT INTO organization (organization_id, label, created_at, updated_at) VALUES (:organization_id, :label, :created_at, :updated_at)"
 	_, err := r.db.NamedQuery(sql, organization)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return organization, nil
+	return nil
 }
 
-func (r OrganizationRepository) Update(organization *domains.Organization) (*domains.Organization, error) {
+func (r OrganizationRepository) Update(organization *domains.OrganizationUpdate) error {
 	sql := "UPDATE organization SET label=:label, updated_at=:updated_at WHERE organization_id=:organization_id"
 	_, err := r.db.NamedQuery(sql, organization)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return organization, nil
+	return nil
 }
 
-func (r OrganizationRepository) Delete(status *domains.UpdateBool) error {
-	sql := "UPDATE organization SET is_deleted=:status, updated_at=:updated_at WHERE organization_id=:entity_id"
+func (r OrganizationRepository) SetEnabled(status *domains.UpdateBool) error {
+	sql := "UPDATE organization SET enabled=:status, updated_at=:updated_at WHERE organization_id=:entity_id"
 	_, err := r.db.NamedQuery(sql, status)
 	if err != nil {
 		return err

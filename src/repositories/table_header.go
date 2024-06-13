@@ -5,22 +5,22 @@ import (
 	"min-selhoz-backend/src/domains"
 )
 
-type TableHeader interface {
-	List() (*[]domains.TableHeader, error)
+type TableHeaderInterface interface {
+	ListByTableId(tableID string) (*[]domains.TableHeader, error)
 	Retrieve(id string) (*domains.TableHeader, error)
 	Create(tHeader *domains.TableHeader) (*domains.TableHeader, error)
 	Update(tHeader *domains.TableHeader) (*domains.TableHeader, error)
-	Delete(status *domains.UpdateBool) error
+	SetDelete(status *domains.UpdateBool) error
 }
 
 type TableHeaderRepository struct {
 	db *sqlx.DB
 }
 
-func (r TableHeaderRepository) List() (*[]domains.TableHeader, error) {
+func (r TableHeaderRepository) ListByTableId(tableID string) (*[]domains.TableHeader, error) {
 	tHeaders := new([]domains.TableHeader)
-	sql := "SELECT * from table_header"
-	err := r.db.Select(&tHeaders, sql)
+	sql := "SELECT * from table_header WHERE table_id=&1"
+	err := r.db.Select(&tHeaders, sql, tableID)
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +59,7 @@ func (r TableHeaderRepository) Update(tHeader *domains.TableHeader) (*domains.Ta
 	return tHeader, nil
 }
 
-func (r TableHeaderRepository) Delete(status *domains.UpdateBool) error {
+func (r TableHeaderRepository) SetDelete(status *domains.UpdateBool) error {
 	sql := "UPDATE table_header SET is_deleted=:status WHERE table_id=:entity_id"
 	_, err := r.db.NamedQuery(sql, status)
 	if err != nil {

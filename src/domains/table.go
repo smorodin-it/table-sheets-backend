@@ -30,6 +30,12 @@ type TableHeader struct {
 	UpdatedAt time.Time `db:"updated_at"`
 }
 
+type TableHeaderUpdate struct {
+	ID        string    `db:"table_header_id"`
+	UpdatedAt time.Time `db:"updated_at"`
+	forms.TableHeader
+}
+
 type TableRow struct {
 	ID        string    `db:"table_row_id"`
 	Label     *string   `db:"label"`

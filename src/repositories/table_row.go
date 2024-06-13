@@ -41,7 +41,7 @@ func (r TableRowRepository) Retrieve(id string) (*domains.TableRow, error) {
 
 func (r TableRowRepository) Create(tRow domains.TableRow) (*domains.TableRow, error) {
 	sql := "INSERT INTO table_row (table_row_id, label, is_deleted, table_id, created_at, updated_at) VALUES (:table_row_id, :label, :is_deleted, :table_id, :created_at, :updated_at)"
-	_, err := r.db.NamedExec(sql, tRow)
+	_, err := r.db.NamedQuery(sql, tRow)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +60,7 @@ func (r TableRowRepository) Update(tRow domains.TableRow) (*domains.TableRow, er
 }
 
 func (r TableRowRepository) Delete(status domains.UpdateBool) error {
-	sql := "UPDATE table_row SET is_deleted=:status WHERE table_row_id=:entity_id"
+	sql := "UPDATE table_row SET is_deleted=:status, updated_at=:updated_at WHERE table_row_id=:entity_id"
 	_, err := r.db.NamedExec(sql, status)
 	if err != nil {
 		return err

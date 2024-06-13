@@ -77,7 +77,7 @@ create table if not exists table_cell
     table_header_id varchar(36)  not null,
     table_row_id    varchar(36)  not null,
     table_id        varchar(36)  not null,
-    value           varchar(256) not null,
+    value           varchar(256),
     type            int          not null,
     created_at      timestamp without time zone,
     updated_at      timestamp without time zone,

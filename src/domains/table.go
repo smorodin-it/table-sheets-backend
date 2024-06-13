@@ -35,7 +35,7 @@ type TableCell struct {
 	TableHeaderID string    `db:"table_header_id"`
 	TableRowID    string    `db:"table_row_id"`
 	TableID       string    `db:"table_id"`
-	Value         string    `db:"value"`
+	Value         *string   `db:"value"`
 	Type          int       `db:"type"`
 	CreatedAt     time.Time `db:"created_at"`
 	UpdatedAt     time.Time `db:"updated_at"`

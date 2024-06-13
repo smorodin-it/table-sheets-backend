@@ -41,7 +41,7 @@ func (r UserRepository) Retrieve(id string) (*domains.User, error) {
 
 func (r UserRepository) Create(user *domains.User) (*domains.User, error) {
 	sql := "INSERT INTO \"user\" (user_id, username, first_name, last_name, patronymic, enabled, role, organization_id) VALUES (:user_id, :username, :first_name, :last_name, :patronymic, :enabled, :role, :organization_id)"
-	_, err := r.db.NamedExec(sql, user)
+	_, err := r.db.NamedQuery(sql, user)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +51,7 @@ func (r UserRepository) Create(user *domains.User) (*domains.User, error) {
 
 func (r UserRepository) Update(user *domains.User) (*domains.User, error) {
 	sql := "UPDATE \"user\" SET username=:username, first_name=:first_name, last_name=:last_name, patronymic=:patronymic, role=:role, organization_id=:organization_id WHERE user_id=:user_id"
-	_, err := r.db.NamedExec(sql, user)
+	_, err := r.db.NamedQuery(sql, user)
 	if err != nil {
 		return nil, err
 	}
@@ -61,7 +61,7 @@ func (r UserRepository) Update(user *domains.User) (*domains.User, error) {
 
 func (r UserRepository) Enable(status *domains.UpdateBool) (*domains.UpdateBool, error) {
 	sql := "UPDATE \"user\" SET enabled=:status WHERE user_id=:user_id"
-	_, err := r.db.NamedExec(sql, status)
+	_, err := r.db.NamedQuery(sql, status)
 	if err != nil {
 		return nil, err
 	}

@@ -41,7 +41,7 @@ func (r TableHeaderRepository) Retrieve(id string) (*domains.TableHeader, error)
 
 func (r TableHeaderRepository) Create(tHeader *domains.TableHeader) (*domains.TableHeader, error) {
 	sql := "INSERT INTO table_header (table_header_id, label, is_deleted, table_id, parent_id, created_at, updated_at) VALUES (:table_header_id, :label, :is_deleted, :table_id, :parent_id, :created_at, :updated_at)"
-	_, err := r.db.NamedExec(sql, tHeader)
+	_, err := r.db.NamedQuery(sql, tHeader)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +51,7 @@ func (r TableHeaderRepository) Create(tHeader *domains.TableHeader) (*domains.Ta
 
 func (r TableHeaderRepository) Update(tHeader *domains.TableHeader) (*domains.TableHeader, error) {
 	sql := "UPDATE table_header SET label=:label, parent_id=:parent_id, updated_at=:updated_at WHERE table_id=:table_header_id"
-	_, err := r.db.NamedExec(sql, tHeader)
+	_, err := r.db.NamedQuery(sql, tHeader)
 	if err != nil {
 		return nil, err
 	}
@@ -61,7 +61,7 @@ func (r TableHeaderRepository) Update(tHeader *domains.TableHeader) (*domains.Ta
 
 func (r TableHeaderRepository) Delete(status *domains.UpdateBool) error {
 	sql := "UPDATE table_header SET is_deleted=:status WHERE table_id=:entity_id"
-	_, err := r.db.NamedExec(sql, status)
+	_, err := r.db.NamedQuery(sql, status)
 	if err != nil {
 		return err
 	}

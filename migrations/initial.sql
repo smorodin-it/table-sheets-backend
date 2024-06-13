@@ -98,5 +98,7 @@ create table if not exists table_cell_2_table_cell
 
     primary key (id),
     foreign key (table_cell_value_id) references table_cell (table_cell_id),
-    foreign key (table_cell_argument_id) references table_cell (table_cell_id)
+    foreign key (table_cell_argument_id) references table_cell (table_cell_id),
+
+    constraint constr_table_cell_2_table_cell unique (table_cell_value_id, table_cell_argument_id)
 )

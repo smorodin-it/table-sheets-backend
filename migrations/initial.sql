@@ -31,7 +31,7 @@ create table if not exists "table"
 (
     table_id        varchar(36)  not null,
     label           varchar(256) not null,
-    is_deleted      boolean                     default false,
+    is_deleted      boolean default false,
     organization_id varchar(36)  not null,
     created_at      timestamp without time zone,
     updated_at      timestamp without time zone,
@@ -57,12 +57,12 @@ create table if not exists table_header
 
 create table if not exists table_row
 (
-    table_row_id varchar(36)  not null,
-    label        varchar(256) not null,
-    is_deleted boolean default false,
-    table_id varchar(36)  not null,
-    created_at      timestamp without time zone,
-    updated_at      timestamp without time zone,
+    table_row_id varchar(36) not null,
+    label        varchar(256) default null,
+    is_deleted   boolean      default false,
+    table_id     varchar(36) not null,
+    created_at   timestamp without time zone,
+    updated_at   timestamp without time zone,
 
     primary key (table_row_id),
     foreign key (table_id) references "table" (table_id)
@@ -86,4 +86,17 @@ create table if not exists table_cell
     foreign key (table_id) references "table" (table_id),
 
     constraint constr_table_cell unique (table_header_id, table_row_id)
+);
+
+create table if not exists table_cell_2_table_cell
+(
+    table_cell_value_id    varchar(36) not null,
+    table_cell_argument_id varchar(36) not null,
+    id                     varchar(36) not null,
+    created_at             timestamp without time zone,
+    updated_at             timestamp without time zone,
+
+    primary key (id),
+    foreign key (table_cell_value_id) references table_cell (table_cell_id),
+    foreign key (table_cell_argument_id) references table_cell (table_cell_id)
 )

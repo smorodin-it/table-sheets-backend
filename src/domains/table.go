@@ -23,7 +23,7 @@ type TableHeader struct {
 
 type TableRow struct {
 	ID        string    `db:"table_row_id"`
-	Label     string    `db:"label"`
+	Label     *string   `db:"label"`
 	IsDeleted bool      `db:"is_deleted"`
 	TableID   string    `db:"table_id"`
 	CreatedAt time.Time `db:"created_at"`
@@ -39,4 +39,12 @@ type TableCell struct {
 	Type          int       `db:"type"`
 	CreatedAt     time.Time `db:"created_at"`
 	UpdatedAt     time.Time `db:"updated_at"`
+}
+
+type TableCell2TableCell struct {
+	TableCellValueID    string    `db:"table_cell_value_id"`
+	TableCellArgumentID string    `db:"table_cell_argument_id"`
+	ID                  string    `db:"id"`
+	CreatedAt           time.Time `db:"created_at"`
+	UpdatedAt           time.Time `db:"updated_at"`
 }

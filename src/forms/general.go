@@ -1,5 +1,5 @@
 package forms
 
-type UpdateBoolForm struct {
+type UpdateBool struct {
 	Status bool `json:"status"`
 }

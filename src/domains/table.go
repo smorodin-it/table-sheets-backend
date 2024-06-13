@@ -1,6 +1,9 @@
 package domains
 
-import "time"
+import (
+	"min-selhoz-backend/src/forms"
+	"time"
+)
 
 type Table struct {
 	ID             string    `db:"table_id"`
@@ -9,6 +12,12 @@ type Table struct {
 	OrganizationId string    `db:"organization_id"`
 	CreatedAt      time.Time `db:"created_at"`
 	UpdatedAt      time.Time `db:"updated_at"`
+}
+
+type TableUpdate struct {
+	ID        string    `db:"table_id"`
+	UpdatedAt time.Time `db:"updated_at"`
+	forms.Table
 }
 
 type TableHeader struct {

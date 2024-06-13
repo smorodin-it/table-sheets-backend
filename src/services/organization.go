@@ -14,7 +14,7 @@ type OrganizationServiceInterface interface {
 	Retrieve(id string) (*responses.OrganizationResp, error)
 	Create(organization *forms.Organization) (*responses.ResponseAdd, error)
 	Update(organization *forms.Organization, id string) (*responses.ResponseStatus, error)
-	Delete(status *forms.UpdateBoolForm, id string) (*responses.ResponseStatus, error)
+	Delete(status *forms.UpdateBool, id string) (*responses.ResponseStatus, error)
 }
 
 type OrganizationService struct {
@@ -90,7 +90,7 @@ func (s OrganizationService) Update(form *forms.Organization, id string) (*respo
 	return &responses.ResponseStatus{Status: true}, nil
 }
 
-func (s OrganizationService) Delete(form *forms.UpdateBoolForm, id string) (*responses.ResponseStatus, error) {
+func (s OrganizationService) Delete(form *forms.UpdateBool, id string) (*responses.ResponseStatus, error) {
 	statusDomain := domains.UpdateBool{
 		ID:        id,
 		Status:    form.Status,

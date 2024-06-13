@@ -5,13 +5,14 @@ import (
 	"min-selhoz-backend/src/domains"
 )
 
-type Table interface {
+type TableRepositoryInterface interface {
 	List() (*[]domains.Table, error)
 	Retrieve(id string) (*domains.Table, error)
-	Create(table *domains.Table) (*domains.Table, error)
-	Update(table *domains.Table) (*domains.Table, error)
-	Delete(status *domains.UpdateBool) error
+	Create(table *domains.Table) error
+	Update(table *domains.TableUpdate) error
+	SetDelete(status *domains.UpdateBool) error
 }
+
 type TableRepository struct {
 	db *sqlx.DB
 }
@@ -38,27 +39,27 @@ func (r TableRepository) Retrieve(id string) (*domains.Table, error) {
 	return table, nil
 }
 
-func (r TableRepository) Create(table *domains.Table) (*domains.Table, error) {
+func (r TableRepository) Create(table *domains.Table) error {
 	sql := "INSERT INTO \"table\" (table_id, label, is_deleted, organization_id, created_at, updated_at) VALUES (:table_id, :label, :is_deleted, :organization_id, :created_at, :updated_at)"
 	_, err := r.db.NamedQuery(sql, table)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return table, nil
+	return nil
 }
 
-func (r TableRepository) Update(table *domains.Table) (*domains.Table, error) {
+func (r TableRepository) Update(table *domains.TableUpdate) error {
 	sql := "UPDATE \"table\" SET label=:label, updated_at=:updated_at WHERE table_id=:table_id"
 	_, err := r.db.NamedQuery(sql, table)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return table, nil
+	return nil
 }
 
-func (r TableRepository) Delete(status *domains.UpdateBool) error {
+func (r TableRepository) SetDelete(status *domains.UpdateBool) error {
 	sql := "UPDATE \"table\" SET is_deleted=:status, updated_at=:updated_at WHERE table_id=:entity_id"
 	_, err := r.db.NamedQuery(sql, status)
 	if err != nil {
@@ -66,4 +67,8 @@ func (r TableRepository) Delete(status *domains.UpdateBool) error {
 	}
 
 	return nil
+}
+
+func NewTableRepository(db *sqlx.DB) TableRepositoryInterface {
+	return TableRepository{db}
 }

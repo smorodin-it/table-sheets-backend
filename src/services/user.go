@@ -14,7 +14,7 @@ type UserServiceInterface interface {
 	Retrieve(id string) (*responses.UserResp, error)
 	Create(form *forms.User) (*responses.ResponseAdd, error)
 	Update(form *forms.User, id string) (*responses.ResponseStatus, error)
-	Enable(form *forms.UpdateBoolForm, id string) error
+	Enable(form *forms.UpdateBool, id string) error
 }
 
 type UserService struct {
@@ -108,7 +108,7 @@ func (s UserService) Update(form *forms.User, id string) (*responses.ResponseSta
 	}, nil
 }
 
-func (s UserService) Enable(form *forms.UpdateBoolForm, id string) error {
+func (s UserService) Enable(form *forms.UpdateBool, id string) error {
 	statusDomain := domains.UpdateBool{
 		ID:        id,
 		Status:    form.Status,

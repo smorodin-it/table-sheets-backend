@@ -47,12 +47,15 @@ create table if not exists table_header
     is_deleted      boolean default false,
     table_id        varchar(36)  not null,
     parent_id       varchar(36)  not null,
+    lft             int          not null,
+    rgt             int          not null,
     created_at      timestamp without time zone,
     updated_at      timestamp without time zone,
 
     primary key (table_header_id),
     foreign key (table_id) references "table" (table_id),
-    foreign key (parent_id) references table_header (table_header_id)
+    foreign key (parent_id) references table_header (table_header_id),
+    constraint constr_table_header unique (table_header_id, lft, rgt)
 );
 
 create table if not exists table_row

@@ -1,6 +1,7 @@
 package services
 
 import (
+	"github.com/google/uuid"
 	"min-selhoz-backend/src/forms"
 	"min-selhoz-backend/src/repositories"
 	"min-selhoz-backend/src/responses"
@@ -19,8 +20,22 @@ type TableHeaderService struct {
 }
 
 func (s TableHeaderService) ListByTableId(tableID string) (*responses.TableHeaderList, error) {
-	//TODO implement me
-	panic("implement me")
+	tableHeaders, err := s.r.ListByTableId(tableID)
+	if err != nil {
+		return nil, err
+	}
+
+	tableHeadersResp := make(responses.TableHeaderList, 0)
+	for _, tableHeader := range *tableHeaders {
+		tableHeadersResp = append(tableHeadersResp, responses.TableHeader{
+			ID:        uuid.New().String(),
+			Label:     tableHeader.Label,
+			IsDeleted: tableHeader.IsDeleted,
+			ParentID:  tableHeader.ParentID,
+			//Child:     &tableHeadersResp,
+		})
+	}
+
 }
 
 func (s TableHeaderService) Retrieve(id string) (*responses.TableHeader, error) {

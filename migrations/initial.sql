@@ -104,4 +104,32 @@ create table if not exists table_cell_2_table_cell
     foreign key (table_cell_argument_id) references table_cell (table_cell_id),
 
     constraint constr_table_cell_2_table_cell unique (table_cell_value_id, table_cell_argument_id)
+);
+
+create or replace procedure add_table_header(
+    tableHeaderId table_header.table_header_id%type,
+    headerLabel table_header.label%type,
+    tableId table_header.table_id%type,
+    parentId table_header.table_id%type,
+    createdAt table_header.created_at%type,
+    updatedAt table_header.updated_at%type
 )
+    language plpgsql
+as
+$$
+declare
+    myRight int;
+
+begin
+    --         TODO: IMPLEMENT TABLE LOCK
+    select table_header.rgt into myRight from table_header where table_header_id = parentId;
+
+    update table_header set rgt = rgt + 2 where rgt > myRight;
+    update table_header set lft = lft + 2 where lft > myRight;
+
+    insert into table_header (table_header_id, label, is_deleted, table_id, parent_id, lft, rgt, created_at, updated_at)
+    values (tableHeaderId, headerLabel, false, tableId, parentId, myRight + 1, myRight + 2, createdAt, updatedAt);
+
+--     commit;
+end;
+$$

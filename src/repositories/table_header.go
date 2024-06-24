@@ -46,17 +46,7 @@ func (r TableHeaderRepository) Retrieve(id string) (*domains.TableHeader, error)
 }
 
 func (r TableHeaderRepository) Create(tHeader *domains.TableHeader) error {
-	sql := `BEGIN;
-
-            DROP TABLE IF EXISTS tmp_table;
-            CREATE TEMPORARY TABLE tmp_table AS SELECT rgt FROM table_header WHERE parent_id=:parent_id;
-
-			UPDATE table_header SET rgt = rgt + 2 WHERE rgt > (SELECT rgt FROM tmp_table).rgt;
-            UPDATE table_header SET lft = lft + 2 WHERE lft > (SELECT rgt FROM tmp_table).rgt;
-
-            INSERT INTO table_header (table_header_id, label, is_deleted, table_id, parent_id, lft, rgt, created_at, updated_at)
-            VALUES (:table_header_id, :label, :is_deleted, :table_id, :parent_id, (SELECT rgt FROM tmp_table).rgt + 1, (SELECT rgt FROM tmp_table).rgt + 2, :created_at, :updated_at);
-            COMMIT;`
+	sql := "CALL add_table_header(tableheaderid := :table_header_id, headerlabel := :label, tableid := :table_id, parentid := :parent_id, createdat := :created_at, updatedat := :updated_at)"
 
 	_, err := r.db.NamedQuery(sql, tHeader)
 	if err != nil {

@@ -2,15 +2,17 @@ package services
 
 import (
 	"github.com/google/uuid"
+	"min-selhoz-backend/src/domains"
 	"min-selhoz-backend/src/forms"
 	"min-selhoz-backend/src/repositories"
 	"min-selhoz-backend/src/responses"
+	"time"
 )
 
 type TableHeaderInterface interface {
 	ListByTableId(tableID string) (*responses.TableHeaderList, error)
 	Retrieve(id string) (*responses.TableHeader, error)
-	Create(form *forms.TableHeader) error
+	Create(form *forms.TableHeader) (*string, error)
 	Update(form *forms.TableHeader, id string) error
 	SetDelete(form *forms.UpdateBool, id string) error
 }
@@ -36,6 +38,7 @@ func (s TableHeaderService) ListByTableId(tableID string) (*responses.TableHeade
 		})
 	}
 
+	return &tableHeadersResp, nil
 }
 
 func (s TableHeaderService) Retrieve(id string) (*responses.TableHeader, error) {
@@ -43,9 +46,23 @@ func (s TableHeaderService) Retrieve(id string) (*responses.TableHeader, error) 
 	panic("implement me")
 }
 
-func (s TableHeaderService) Create(form *forms.TableHeader) error {
-	//TODO implement me
-	panic("implement me")
+func (s TableHeaderService) Create(form *forms.TableHeader) (*string, error) {
+	tableHeader := &domains.TableHeader{
+		ID:        uuid.New().String(),
+		Label:     form.Label,
+		IsDeleted: false,
+		TableID:   form.TableID,
+		ParentID:  form.ParentID,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+
+	err := s.r.Create(tableHeader)
+	if err != nil {
+		return nil, err
+	}
+
+	return &tableHeader.ID, nil
 }
 
 func (s TableHeaderService) Update(form *forms.TableHeader, id string) error {

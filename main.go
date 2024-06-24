@@ -3,13 +3,19 @@ package main
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 	"min-selhoz-backend/src/handlers"
 	"min-selhoz-backend/src/repositories"
 	"min-selhoz-backend/src/services"
 )
 
 func NewDB() *sqlx.DB {
-	return nil
+	db, err := sqlx.Connect("postgres", "")
+	if err != nil {
+		panic(err.Error())
+	}
+
+	return db
 }
 
 func main() {
@@ -29,7 +35,7 @@ func main() {
 
 	tHeader := api.Group("/table_header")
 	tHeader.Get("/list/:table_id", tableHeaderHandler.ListByTableId())
-	tHeader.Post("/list/create", tableHeaderHandler.Create())
+	tHeader.Post("/create", tableHeaderHandler.Create())
 
 	app.Listen(":3000")
 }

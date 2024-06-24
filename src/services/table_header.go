@@ -18,7 +18,7 @@ type TableHeaderInterface interface {
 }
 
 type TableHeaderService struct {
-	r *repositories.TableHeaderRepository
+	r repositories.TableHeaderInterface
 }
 
 func (s TableHeaderService) ListByTableId(tableID string) (*responses.TableHeaderList, error) {
@@ -75,6 +75,6 @@ func (s TableHeaderService) SetDelete(form *forms.UpdateBool, id string) error {
 	panic("implement me")
 }
 
-func NewTableHeaderService(r *repositories.TableHeaderRepository) TableHeaderInterface {
-	return TableHeaderService{r}
+func NewTableHeaderService(r repositories.TableHeaderInterface) TableHeaderInterface {
+	return &TableHeaderService{r}
 }

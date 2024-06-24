@@ -7,16 +7,18 @@ import (
 )
 
 type TableHeaderInterface interface {
-	ListByTableId(tableID string) fiber.Handler
+	ListByTableId() fiber.Handler
 	Create() fiber.Handler
 }
 
 type TableHeaderHandler struct {
-	s services.TableHeaderService
+	s services.TableHeaderInterface
 }
 
-func (h TableHeaderHandler) ListByTableId(tableID string) fiber.Handler {
+func (h TableHeaderHandler) ListByTableId() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
+		tableID := ctx.Params("tableId")
+
 		tableHeaderResp, err := h.s.ListByTableId(tableID)
 		if err != nil {
 			return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
@@ -44,6 +46,6 @@ func (h TableHeaderHandler) Create() fiber.Handler {
 	}
 }
 
-func NewTableHeaderHandler(s services.TableHeaderService) TableHeaderInterface {
+func NewTableHeaderHandler(s services.TableHeaderInterface) TableHeaderInterface {
 	return &TableHeaderHandler{s}
 }

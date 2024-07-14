@@ -122,12 +122,25 @@ declare
 
 begin
     --         TODO: IMPLEMENT TABLE LOCK
-    select table_header.rgt into myRight from table_header where table_header_id = parentId;
+    if parentid is null then
+        select table_header.rgt
+        into myRight
+        from table_header
+        where table_header.rgt = (select MAX(rgt) from table_header);
+
+    else
+        select table_header.rgt
+        into myRight
+        from table_header
+        where table_header_id = parentId;
+    end if;
+
 
     update table_header set rgt = rgt + 2 where rgt > myRight;
     update table_header set lft = lft + 2 where lft > myRight;
 
-    insert into table_header (table_header_id, label, is_deleted, table_id, parent_id, lft, rgt, created_at, updated_at)
+    insert into table_header (table_header_id, label, is_deleted, table_id, parent_id, lft, rgt, created_at,
+                              updated_at)
     values (tableHeaderId, headerLabel, false, tableId, parentId, myRight + 1, myRight + 2, createdAt, updatedAt);
 
 --     commit;

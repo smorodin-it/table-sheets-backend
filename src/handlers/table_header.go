@@ -17,7 +17,7 @@ type TableHeaderHandler struct {
 
 func (h TableHeaderHandler) ListByTableId() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		tableID := ctx.Params("table_id")
+		tableID := ctx.Params("tableId")
 
 		tableHeaderResp, err := h.s.ListByTableId(tableID)
 		if err != nil {

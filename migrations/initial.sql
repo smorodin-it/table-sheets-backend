@@ -46,7 +46,7 @@ create table if not exists table_header
     label           varchar(256) not null,
     is_deleted      boolean default false,
     table_id        varchar(36)  not null,
-    parent_id       varchar(36)  not null,
+    parent_id       varchar(36),
     lft             int          not null,
     rgt             int          not null,
     created_at      timestamp without time zone,

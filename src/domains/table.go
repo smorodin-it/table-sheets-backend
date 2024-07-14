@@ -21,13 +21,14 @@ type TableUpdate struct {
 }
 
 type TableHeader struct {
-	ID        string `db:"table_header_id"`
-	Label     string `db:"label"`
-	IsDeleted bool   `db:"is_deleted"`
-	TableID   string `db:"table_id"`
-	ParentID  string `db:"parent_id"`
+	ID        string  `db:"table_header_id"`
+	Label     string  `db:"label"`
+	IsDeleted bool    `db:"is_deleted"`
+	TableID   string  `db:"table_id"`
+	ParentID  *string `db:"parent_id"`
 	//Lft       int       `db:"lft"`
 	//Rgt       int       `db:"rgt"`
+	Level     int       `db:"level"`
 	CreatedAt time.Time `db:"created_at"`
 	UpdatedAt time.Time `db:"updated_at"`
 }

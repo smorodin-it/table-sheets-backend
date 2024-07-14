@@ -18,15 +18,15 @@ type TableHeaderRepository struct {
 }
 
 func (r TableHeaderRepository) ListByTableId(tableID string) (*[]domains.TableHeader, error) {
-	tHeaders := new([]domains.TableHeader)
-	sql := "SELECT *, (COUNT(parent.label) - 1) as level FROM table_header as node, table_header as parent WHERE node.table_id=&1 AND parent.table_id=&1 AND node.lft BETWEEN parent.lft AND parent.rgt GROUP BY node.label ORDER BY node.lft"
+	tHeaders := make([]domains.TableHeader, 0)
+	sql := "SELECT node.label, (COUNT(parent.label) - 1) as level FROM table_header as node, table_header as parent WHERE node.table_id=$1 AND parent.table_id=$1 AND node.lft BETWEEN parent.lft AND parent.rgt GROUP BY node.label, node.lft ORDER BY node.lft"
 
 	err := r.db.Select(&tHeaders, sql, tableID)
 	if err != nil {
 		return nil, err
 	}
 
-	return tHeaders, nil
+	return &tHeaders, nil
 }
 
 func (r TableHeaderRepository) Retrieve(id string) (*domains.TableHeader, error) {
